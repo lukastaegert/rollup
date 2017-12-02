@@ -103,5 +103,25 @@ export default [
 				rollup: '../dist/rollup.js'
 			}
 		}
-	}
+	},
+
+	/* bundle.js */
+	{
+		input: 'src/Bundle.js',
+		plugins: [
+			json(),
+			buble({
+				include: ['src/**', 'node_modules/acorn/**'],
+				target: {
+					node: '4'
+				}
+			}),
+			resolve(),
+			commonjs()
+		],
+		external: ['fs', 'path', 'events', 'module'],
+		output: [
+			{ file: 'dist/bundle.js', format: 'cjs' }
+		]
+	},
 ];

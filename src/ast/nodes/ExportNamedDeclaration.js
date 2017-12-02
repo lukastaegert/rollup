@@ -16,7 +16,9 @@ export default class ExportNamedDeclaration extends Node {
 
 	render ( code, es ) {
 		if ( this.declaration ) {
-			code.remove( this.start, this.declaration.start );
+			if (!this.included) {
+				code.remove( this.start, this.declaration.start );
+			}
 			this.declaration.render( code, es );
 		} else {
 			const start = this.leadingCommentStart || this.start;

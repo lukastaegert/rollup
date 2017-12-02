@@ -10,8 +10,8 @@ export function load ( id ) {
 function findFile ( file ) {
 	try {
 		const stats = lstatSync( file );
-		if ( stats.isSymbolicLink() ) return findFile( realpathSync( file ) );
-		if ( stats.isFile() ) {
+		// if ( stats.isSymbolicLink() ) return findFile( realpathSync( file ) );
+		if ( stats.isSymbolicLink() || stats.isFile() ) {
 			// check case
 			const name = basename( file );
 			const files = readdirSync( dirname( file ) );

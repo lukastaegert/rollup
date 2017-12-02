@@ -8,6 +8,8 @@ export default class ImportDeclaration extends Node {
 	}
 
 	render ( code ) {
-		code.remove( this.start, this.next || this.end );
+		if (!this.included) {
+			code.remove( this.start, this.next || this.end );
+		}
 	}
 }
