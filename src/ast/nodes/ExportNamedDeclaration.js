@@ -17,24 +17,18 @@ export default class ExportNamedDeclaration extends Node {
 	render ( code, es ) {
 		if ( this.declaration ) {
 			if (!this.included) {
-				code.remove( this.start, this.declaration.start );
+				code.remove( this.start, this.end );
+			} else {
+				this.declaration.render( code, es );
 			}
-			this.declaration.render( code, es );
-		} else {
-			const start = this.leadingCommentStart || this.start;
-			const end = this.next || this.end;
-
-			if ( this.defaultExport ) {
-				const name = this.defaultExport.getName( es );
-				const originalName = this.defaultExport.original.getName( es );
-
-				if ( name !== originalName ) {
-					code.overwrite( start, end, `var ${name} = ${originalName};` );
-					return;
+		} else if (!this.source) {
+			// this is the "export {x, y as z}" case; we're only handling non-reexports for now
+			this.specifiers.forEach((specifier, position) => {
+				if (!this.scope.findVariable(specifier.local.name).included) {
+					const specifierEnd = position === specifiers.length - 1 ? specifier.end : specifiers[position + 1].start;
+					code.remove(specifier.start, specifierEnd);
 				}
-			}
-
-			code.remove( start, end );
+			})
 		}
 	}
 }
